@@ -190,7 +190,7 @@ def get_puzzle_array():
 startSolving = False
 solved = False
 puzzle = Puzzle()
-
+totalMoves = 0
 # Main game loop
 while True:
     for event in pygame.event.get():
@@ -219,6 +219,7 @@ while True:
                 closedList.append(puzzle)
                 startSolving = True
                 solved = False
+                totalMoves=0
 
     if startSolving:
         if not solved:
@@ -234,11 +235,13 @@ while True:
             pygame.display.flip()
             if newState[0].totalCost == 0:
                 print("Solved the puzzle")
+                print("Total Moves: ",totalMoves)
                 solved = True
                 startSolving = False
             puzzle = newState[0]
             closedList.append(puzzle)
             puzzle_state = puzzle.data
+            totalMoves+=1
 
     # Clear the screen
     screen.fill((255, 255, 255))

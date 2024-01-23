@@ -1,3 +1,6 @@
+import pygame
+import sys
+
 openList = []
 closedListLeft = []  # Closed list for the left bank
 closedListRight = []  # Closed List for the right bank
@@ -109,33 +112,114 @@ def generateStateWhenGoingToTheRightbank(currentState):
     return newStates
 
 
+# Initialize Pygame
+pygame.init()
+
+# Set up colors
+WHITE = (255, 255, 255)
+BLUE = (0, 0, 255)
+RED = (255, 0, 0)
+BROWN = (139, 69, 19)
+BLACK = (0, 0, 0)
+
+# Set up screen
+WIDTH, HEIGHT = 500, 300
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Missionaries and Cannibals")
+
+# Set up game variables
 state = State(3, 3, 0, None)
 
 closedListRight.append(state)
 openList.append(state)
+
+clock = pygame.time.Clock()
+font = pygame.font.Font(None, 36)
+
+
+def draw_board(state):
+    if state is not None:
+        screen.fill(WHITE)
+        pygame.draw.rect(screen, BLACK, (50, 50, 400, 200), 2)  # River
+        draw_bank(1, state.p, state.c)
+        draw_bank(2, 3 - state.p, 3 - state.c)
+        draw_boat(state)
+
+
+def draw_bank(bank_num, num_missionaries, num_cannibals):
+    x_offset = 100 if bank_num == 1 else 300
+    y_offset = 150
+    for i in range(num_missionaries):
+        pygame.draw.circle(screen, BLUE, (x_offset + 20, y_offset - i * 40 + 20), 15)
+    for i in range(num_cannibals):
+        pygame.draw.circle(screen, RED, (x_offset + 60, y_offset - i * 40 + 20), 15)
+
+
+def draw_boat(state):
+    x_offset = 230 if state.boatDirection == 0 else 270
+    pygame.draw.rect(screen, BROWN, (x_offset, 100, 40, 80))
+
+
+def draw_message(message):
+    text = font.render(message, True, BLUE)
+    screen.blit(text, (50, 10))
+
+
+startSolving = False
 numberOfIterations = 0
+# Main game loop
+running = True
+path: list[State] = []
+index = 0
+# ... (previous code)
 
-while state != State(0, 0, 1, None):
-    if state.boatDirection == 0:
-        newStates = generateStateWhenGoingToTheRightbank(state)
-        openList.extend(newStates)
-        for genState in newStates:
-            openList.extend(generateStatesWhenGoingToTheLeftbank(genState))
+while running:
+    if not startSolving:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    while state != State(0, 0, 1, None):
+                        if state.boatDirection == 0:
+                            newStates = generateStateWhenGoingToTheRightbank(state)
+                            openList.extend(newStates)
+                            for genState in newStates:
+                                openList.extend(generateStatesWhenGoingToTheLeftbank(genState))
 
+                        else:
+                            newStates = generateStatesWhenGoingToTheLeftbank(state)
+                            openList.extend(newStates)
+                            for genState in newStates:
+                                openList.extend(generateStateWhenGoingToTheRightbank(genState))
+
+                        if state.boatDirection == 0:
+                            closedListLeft.append(state)
+                        else:
+                            closedListRight.append(state)
+
+                        state = openList.pop(0)
+                        numberOfIterations += 1
+
+                    startSolving = True
+
+                    while state is not None:
+                        path.insert(0, state)
+                        state = state.parent
+        draw_board(state)
     else:
-        newStates = generateStatesWhenGoingToTheLeftbank(state)
-        openList.extend(newStates)
-        for genState in newStates:
-            openList.extend(generateStateWhenGoingToTheRightbank(genState))
+        draw_board(path[index])
+        index += 1
+        if index == len(path) - 1:
+            state = State(0, 0, 1, None)
+            draw_board(state)
+            startSolving = False
+            index = 0
 
-    state = openList.pop(0)
-    numberOfIterations += 1
-print(" Number of iterations: " + str(numberOfIterations))
-path = []
+    pygame.display.flip()
+    clock.tick(2)
 
-while state is not None:
-    path.insert(0, state)
-    state = state.parent
-
-for state in path:
-    print(state)
+print(numberOfIterations)
+# Quit Pygame
+pygame.quit()
+sys.exit()
