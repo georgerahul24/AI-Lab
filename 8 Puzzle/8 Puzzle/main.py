@@ -16,8 +16,6 @@ class Puzzle:
             return self.numberOfMisplaced < other.numberOfMisplaced
 
 
-closedList: list[Puzzle] = list()
-openList: list[Puzzle] = list()
 
 
 def drawPuzzle(puzzle: Puzzle) -> None:
@@ -91,7 +89,7 @@ def generateStates(current_state: Puzzle):
     state1, state2, state3, state4 = deepcopy(current_state), deepcopy(current_state), deepcopy(
         current_state), deepcopy(current_state)
 
-    x, y = puzzle.zeroPosition
+    x, y = current_state.zeroPosition
     if x - 1 >= 0:
         state1.data[x][y], state1.data[x - 1][y] = state1.data[x - 1][y], state1.data[x][y]
         if not inClosedList(state1):
@@ -115,25 +113,27 @@ def generateStates(current_state: Puzzle):
     return newStates
 
 
-puzzle: Puzzle = Puzzle()
-puzzle.data = [[8, 6, 7], [2, 5, 4], [3, 9, 1]]
+closedList: list[Puzzle] = list()
 
-drawPuzzle(puzzle)
-misplaced(puzzle)
+if __name__ == "__main__":
 
-calculateManhattanAndPositionOf9(puzzle)
 
-while True:
-    newState = generateStates(puzzle)
-    if not len(newState):
-        print("No solution found")
-        break
+    puzzle: Puzzle = Puzzle()
+    puzzle.data = [[4, 1, 3], [2, 9, 5], [7, 8, 6]]
+    misplaced(puzzle)
+    calculateManhattanAndPositionOf9(puzzle)
+    calculateTotalCost(puzzle)
+    while True:
+        newState = generateStates(puzzle)
+        if not len(newState):
+            print("No solution found")
+            break
 
-    newState.sort()
-    print("Selected State")
-    drawPuzzle(newState[0])
-    if (newState[0].totalCost == 0):
-        print("Solved the puzzle")
-        break
-    closedList.append(puzzle)
-    puzzle = newState[0]
+        newState.sort()
+        print("Selected State")
+        drawPuzzle(newState[0])
+        if (newState[0].totalCost == 0):
+            print("Solved the puzzle")
+            break
+        closedList.append(puzzle)
+        puzzle = newState[0]
