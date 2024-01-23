@@ -135,7 +135,7 @@ puzzle_state =[[4, 1, 3], [2, 9, 5], [7, 8, 6]]  # Initial state
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("8 Puzzle Game")
 clock = pygame.time.Clock()
-frameRate = 5
+frameRate = 10
 
 
 
