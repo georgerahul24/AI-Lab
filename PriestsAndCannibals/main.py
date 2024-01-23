@@ -8,11 +8,13 @@ class State:
     c = 3
     total_cost = -1
     boatDirection = -1  # 0 boat is in the left bank  and 1 means boat is in the right bank
+    parent = None
 
-    def __init__(self, p, c, bd):
+    def __init__(self, p, c, bd, parent):
         self.p = p
         self.c = c
         self.boatDirection = bd
+        self.parent = parent
 
     def __eq__(self, other):
         return self.p == other.p and self.c == other.c
@@ -23,10 +25,6 @@ class State:
         Right Bank : {3 - self.p}M {3 - self.c}C
         Boat Direction : {"R" if self.boatDirection else "L"}
         """
-
-
-currentLeftBank = State(0, 0, 0)
-currentRightBank = State(0, 0, 0)
 
 
 def inClosedList(current_state, closedList):
@@ -56,25 +54,25 @@ def generateStatesWhenGoingToTheLeftbank(currentState):
     p, c = currentState.p, currentState.c
 
     if (p + 2) <= 3:
-        state = State(p + 2, c, 0)
+        state = State(p + 2, c, 0, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
 
     if (c + 2) <= 3:
-        state = State(p, c + 2, 0)
+        state = State(p, c + 2, 0, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
     if (p + 1) <= 3 and (c + 1) <= 3:
-        state = State(p + 1, c + 1, 0)
+        state = State(p + 1, c + 1, 0, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
 
     if (p + 1) <= 3:
-        state = State(p + 1, c, 0)
+        state = State(p + 1, c, 0, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
     if (c + 1) <= 3:
-        state = State(p, c + 1, 0)
+        state = State(p, c + 1, 0, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
     return newStates
@@ -86,37 +84,37 @@ def generateStateWhenGoingToTheRightbank(currentState):
     p, c = currentState.p, currentState.c
 
     if (p - 2) >= 0:
-        state = State(p - 2, c, 1)
+        state = State(p - 2, c, 1, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
 
     if (c - 2) >= 0:
-        state = State(p, c - 2, 1)
+        state = State(p, c - 2, 1, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
     if (p - 1) >= 0 and (c - 1) >= 0:
-        state = State(p - 1, c - 1, 1)
+        state = State(p - 1, c - 1, 1, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
 
     if (p - 1) >= 0:
-        state = State(p - 1, c, 1)
+        state = State(p - 1, c, 1, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
     if (c - 1) >= 0:
-        state = State(p, c - 1, 1)
+        state = State(p, c - 1, 1, currentState)
         if not inClosedList(state, closedListLeft) and isAValidState(state):
             newStates.append(state)
 
     return newStates
 
 
-state = State(3, 3, 0)
+state = State(3, 3, 0, None)
 
 closedListRight.append(state)
 openList.append(state)
 
-while state != State(0, 0, 1):
+while state != State(0, 0, 1, None):
     if state.boatDirection == 0:
         newStates = generateStateWhenGoingToTheRightbank(state)
         openList.extend(newStates)
@@ -124,13 +122,18 @@ while state != State(0, 0, 1):
             openList.extend(generateStatesWhenGoingToTheLeftbank(genState))
 
     else:
-        newStates = generateStateWhenGoingToTheRightbank(state)
+        newStates = generateStatesWhenGoingToTheLeftbank(state)
         openList.extend(newStates)
         for genState in newStates:
             openList.extend(generateStateWhenGoingToTheRightbank(genState))
 
+    state = openList.pop(0)
 
-    break
+path = []
 
-for state in openList:
+while state is not None:
+    path.insert(0, state)
+    state = state.parent
+
+for state in path:
     print(state)
