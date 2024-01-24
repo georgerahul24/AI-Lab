@@ -67,8 +67,8 @@ print(np.vstack((ra1, ra2)))
 print(np.hstack((ra1, ra2)))
 
 print("Sorting them")
-print(np.sort(ra1,axis=0))
-print(np.sort(ra2,axis=1))
+print(np.sort(ra1, axis=0))
+print(np.sort(ra2, axis=1))
 
 print("Arithmetic Operations")
 print(np.add(ra1, ra2))
@@ -76,6 +76,20 @@ print(np.subtract(ra1, ra2))
 print(np.multiply(ra1, ra2))
 print(np.divide(ra1, ra2))
 
-
-#g
+# g
 print("Doing subpart g")
+
+iris_dataset = pd.read_csv('iris.csv')
+print(iris_dataset.head())
+
+iris_dataset = iris_dataset.iloc[:, :-1]
+
+mean = np.mean(iris_dataset, axis=0)
+median = np.median(iris_dataset, axis=0)
+min = np.min(iris_dataset, axis=0)
+max = np.max(iris_dataset, axis=0)
+
+print("Mean:", mean)
+print("Median:", median)
+print("Min:", min)
+print("Max:", max)
