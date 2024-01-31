@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
 
     puzzle: Puzzle = Puzzle()
-    puzzle.data = [[4, 1, 3], [2, 9, 5], [7, 8, 6]]
+    puzzle.data = [[1, 3, 5], [8, 7, 2], [4, 6, 9]]
     misplaced(puzzle)
     calculateManhattanAndPositionOf9(puzzle)
     calculateTotalCost(puzzle)

@@ -11,7 +11,7 @@ row_means = np.mean(npArray, axis=1)
 std_dev = np.std(npArray, axis=1)
 
 details = pd.DataFrame({"mean": row_means, "std": std_dev})
-print(details, type(details))
+print(details)
 
 details.to_csv("data_q3a_output.txt", sep=",", index=False)
 
