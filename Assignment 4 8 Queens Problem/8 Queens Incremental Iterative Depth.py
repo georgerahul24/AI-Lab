@@ -76,47 +76,47 @@ def generateStates(queens: list[Queen]):
     return possibleStates
 
 
-results = []
-numberOfIterations = 0
-firstBoardFound = False
-firstBoardNumberOfIterations = 0
 
-initialDepth = 0
-incrementalDepth = 8
-maxDepth = initialDepth
-# if True:
-while maxDepth <= 8:
 
-    openList = []
-    newState = []
-    # if True:
-    try:
-        while True:
-            numberOfIterations += 1
-            if not firstBoardFound:
-                firstBoardNumberOfIterations += 1
+for initialDepth in range(0, 9):
+    for incrementalDepth in range(1, 9):
+        results = []
+        numberOfIterations = 0
+        firstBoardFound = False
+        firstBoardNumberOfIterations = 0
+        maxDepth = initialDepth
+        # if True:
+        while maxDepth <= 8:
 
-            if (_states := generateStates(newState)) is not None and len(_states) > 0:
-                if len(_states[0]) <= maxDepth:  # This means that the max depth is going to be exceeded
-                    openList = _states + openList
+            openList = []
+            newState = []
+            # if True:
+            try:
+                while True:
+                    numberOfIterations += 1
+                    if not firstBoardFound:
+                        firstBoardNumberOfIterations += 1
 
-            newState = openList.pop(0)
+                    if (_states := generateStates(newState)) is not None and len(_states) > 0:
+                        if len(_states[0]) <= maxDepth:  # This means that the max depth is going to be exceeded
+                            openList = _states + openList
 
-            if len(newState) == 8:
-                firstBoardFound = True
-                results.append(newState)
-                printBoard(newState)
+                    newState = openList.pop(0)
 
-    except IndexError as e:
-        # This means that all the possibles are explored
-        pass
-    maxDepth += max(min(incrementalDepth, abs(8 - maxDepth)), 1)
-#
-# for board in results:
-#     printBoard(board)
+                    if len(newState) == 8:
+                        firstBoardFound = True
+                        results.append(newState)
 
-print("Number of results are : ", len(results))
-print("Number of iterations : ", numberOfIterations)
-print("First board found: ", firstBoardNumberOfIterations)
-print("Initial Depth was: ", initialDepth)
-print("Increment in each iteration for depth was : ", incrementalDepth)
+            except IndexError as e:
+                # This means that all the possibles are explored
+                pass
+            maxDepth += max(min(incrementalDepth, abs(8 - maxDepth)), 1)
+        #
+        # for board in results:
+        #     printBoard(board)
+
+        print("Initial: ", initialDepth, "Increment: ", incrementalDepth)
+        print("Number of results are : ", len(results))
+        print("Number of iterations : ", numberOfIterations)
+        print("First board found: ", firstBoardNumberOfIterations)
+        print("____"*15)
