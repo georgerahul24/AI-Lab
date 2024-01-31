@@ -119,4 +119,4 @@ for initialDepth in range(0, 9):
         print("Number of results are : ", len(results))
         print("Number of iterations : ", numberOfIterations)
         print("First board found: ", firstBoardNumberOfIterations)
-        print("____"*15)
+        print("__"*15)
