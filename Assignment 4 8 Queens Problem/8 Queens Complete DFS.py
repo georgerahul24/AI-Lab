@@ -42,6 +42,15 @@ class Queen:
         return str(self.queenName) + " ( " + str(self.x) + ", " + str(self.y) + " ) "
 
 
+class State:
+    depthLevel: int = 0
+    queens: list[Queen] = []
+
+    def __init__(self, depthLevel: int, queens: list[Queen]):
+        self.depthLevel = depthLevel
+        self.queens = queens
+
+
 def printBoard(queens: list[Queen]) -> None:
     print("\n\nBoard\n")
     for i in range(8):
@@ -102,10 +111,13 @@ def generateStates(queens: list[Queen]):
     return possibleStates
 
 
-openList: list[list[Queen]] = [
-    [Queen("0", 0, 0), Queen("1", 1, 0), Queen("2", 2, 0), Queen("3", 3, 0), Queen("4", 4, 0), Queen("5", 5, 0),
-     Queen("6", 6, 0), Queen("7", 7, 0)], ]
+initial_state = State(0, [Queen("0", 0, 0), Queen("1", 1, 0), Queen("2", 2, 0), Queen("3", 3, 0), Queen("4", 4, 0),
+                          Queen("5", 5, 0),
+                          Queen("6", 6, 0), Queen("7", 7, 0)])
 
+newState: list[Queen] = []
+_newState: State = None
+openList: list[State] = [initial_state, ]
 closedList: list[list[Queen]] = []
 newState: list[Queen] = []
 i = 0
@@ -113,13 +125,15 @@ i = 0
 while True:
     print(i, f"Open List: {len(openList)}", f"Closed List: {len(closedList)}")
     i += 1
-    newState = openList.pop(0)
+    _newState = openList.pop(0)
+    newState = _newState.queens
     closedList.append(newState)
     if not checkBoard(newState):
         break
     possibleState = generateStates(newState)
     if possibleState is not None and len(possibleState) > 0:
-        openList = possibleState + openList
+        for state in possibleState:
+            openList.insert(0,State(_newState.depthLevel + 1, state))
 
-print("Board Found")
+print("Board Found at depth: ",_newState.depthLevel)
 printBoard(newState)
