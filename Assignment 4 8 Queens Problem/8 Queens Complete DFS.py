@@ -119,7 +119,7 @@ while True:
         break
     possibleState = generateStates(newState)
     if possibleState is not None and len(possibleState) > 0:
-        openList.extend(possibleState)
+        openList = possibleState + openList
 
 print("Board Found")
 printBoard(newState)
