@@ -82,7 +82,7 @@ closedList: list[Puzzle] = list()
 
 initialState = [[3, 8, 1], [6, 2, 5], [4, 7, 9]]
 
-goalState = [[2, 3, 8], [6, 5, 1], [4, 7, 9]]
+goalState = [[3, 8, 1], [6, 9, 5], [4, 2, 7]]
 
 
 def misplaced(puzzle: Puzzle) -> int:

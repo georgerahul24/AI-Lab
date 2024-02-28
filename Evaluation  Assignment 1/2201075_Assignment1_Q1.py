@@ -1,7 +1,7 @@
 import numpy as np
 
-matrixA = np.random.normal(0, 1, (3, 3))
-matrixB = np.random.uniform(0, 1, (3, 3))
+matrixA = np.random.normal(0, 1, (2, 4))
+matrixB = np.random.uniform(0, 1, (4, 3))
 print("Matrix A")
 print(matrixA)
 print("Matrix B")
